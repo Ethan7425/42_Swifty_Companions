@@ -30,7 +30,7 @@ struct ProfileView: View {
                     Button(action: onBack) {
                         Label("Back", systemImage: "chevron.left")
                             .font(.system(size: 14, weight: .semibold, design: .rounded))
-                            .foregroundStyle(.black.opacity(0.78))
+                            .foregroundStyle(Color.white.opacity(0.82))
                     }
                     .buttonStyle(.plain)
 
@@ -42,12 +42,12 @@ struct ProfileView: View {
 
                     VStack(alignment: .leading, spacing: 6) {
                         Text(profile.displayName)
-                            .font(.system(size: 30, weight: .semibold, design: .rounded))
-                            .foregroundStyle(.black.opacity(0.92))
+                            .font(.system(size: 30, weight: .bold, design: .rounded))
+                            .foregroundStyle(.white.opacity(0.96))
 
                         Text("@\(profile.login)")
                             .font(.system(size: 15, weight: .medium, design: .rounded))
-                            .foregroundStyle(.black.opacity(0.52))
+                            .foregroundStyle(Color(red: 0.79, green: 0.83, blue: 1.00).opacity(0.68))
                     }
                 }
 
@@ -83,20 +83,24 @@ struct ProfileView: View {
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text(achievement.name)
                                         .font(.system(size: 15, weight: .semibold, design: .rounded))
-                                        .foregroundStyle(.black.opacity(0.86))
+                                        .foregroundStyle(.white.opacity(0.9))
 
                                     if let description = achievement.description, !description.isEmpty {
                                         Text(description)
                                             .font(.system(size: 13, weight: .medium, design: .rounded))
-                                            .foregroundStyle(.black.opacity(0.56))
+                                            .foregroundStyle(.white.opacity(0.56))
                                     }
                                 }
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(14)
                                 .background(
-                                    Color.white.opacity(0.72),
+                                    Color.white.opacity(0.06),
                                     in: RoundedRectangle(cornerRadius: 18, style: .continuous)
                                 )
+                                .overlay {
+                                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                                        .stroke(Color(red: 0.58, green: 0.52, blue: 1.00).opacity(0.10), lineWidth: 1)
+                                }
                             }
                         }
                     }
@@ -128,12 +132,23 @@ struct ProfileView: View {
             }
             .padding(28)
             .frame(maxWidth: 820, alignment: .leading)
-            .background(.white.opacity(0.74), in: RoundedRectangle(cornerRadius: 32, style: .continuous))
+            .background(
+                LinearGradient(
+                    colors: [
+                        Color.white.opacity(0.10),
+                        Color(red: 0.09, green: 0.08, blue: 0.22).opacity(0.76)
+                    ],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                ),
+                in: RoundedRectangle(cornerRadius: 32, style: .continuous)
+            )
             .overlay(
                 RoundedRectangle(cornerRadius: 32, style: .continuous)
-                    .stroke(.white.opacity(0.82), lineWidth: 1)
+                    .stroke(Color.white.opacity(0.10), lineWidth: 1)
             )
-            .shadow(color: .black.opacity(0.08), radius: 30, x: 0, y: 18)
+            .shadow(color: Color.black.opacity(0.32), radius: 30, x: 0, y: 18)
+            .shadow(color: Color(red: 0.42, green: 0.28, blue: 0.98).opacity(0.12), radius: 40, x: 0, y: 0)
             .padding(.vertical, 24)
         }
         .scrollIndicators(.hidden)
@@ -152,7 +167,7 @@ struct ProfileView: View {
                         fallbackImage
                     case .empty:
                         ProgressView()
-                            .tint(.black.opacity(0.7))
+                            .tint(.white.opacity(0.8))
                     @unknown default:
                         fallbackImage
                     }
@@ -171,8 +186,8 @@ struct ProfileView: View {
                 .fill(
                     LinearGradient(
                         colors: [
-                            Color(red: 0.17, green: 0.19, blue: 0.22),
-                            Color(red: 0.36, green: 0.45, blue: 0.55)
+                            Color(red: 0.23, green: 0.18, blue: 0.52),
+                            Color(red: 0.16, green: 0.50, blue: 0.98)
                         ],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
@@ -199,17 +214,24 @@ private struct DetailCard: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(title)
                 .font(.system(size: 13, weight: .medium, design: .rounded))
-                .foregroundStyle(.black.opacity(0.52))
+                .foregroundStyle(Color(red: 0.78, green: 0.82, blue: 1.00).opacity(0.62))
 
             Text(value)
                 .font(.system(size: 18, weight: .semibold, design: .rounded))
-                .foregroundStyle(.black.opacity(0.88))
+                .foregroundStyle(.white.opacity(0.94))
                 .lineLimit(2)
                 .minimumScaleFactor(0.8)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(18)
-        .background(Color.white.opacity(0.82), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .background(
+            Color.white.opacity(0.08),
+            in: RoundedRectangle(cornerRadius: 20, style: .continuous)
+        )
+        .overlay {
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                .stroke(Color.white.opacity(0.08), lineWidth: 1)
+        }
     }
 }
 
@@ -221,13 +243,20 @@ private struct SectionCard<Content: View>: View {
         VStack(alignment: .leading, spacing: 16) {
             Text(title)
                 .font(.system(size: 18, weight: .semibold, design: .rounded))
-                .foregroundStyle(.black.opacity(0.84))
+                .foregroundStyle(.white.opacity(0.9))
 
             content
         }
         .padding(20)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.white.opacity(0.82), in: RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .background(
+            Color.white.opacity(0.07),
+            in: RoundedRectangle(cornerRadius: 24, style: .continuous)
+        )
+        .overlay {
+            RoundedRectangle(cornerRadius: 24, style: .continuous)
+                .stroke(Color(red: 0.58, green: 0.52, blue: 1.00).opacity(0.10), lineWidth: 1)
+        }
     }
 }
 
@@ -243,22 +272,31 @@ private struct SkillRow: View {
             HStack {
                 Text(skill.name)
                     .font(.system(size: 15, weight: .semibold, design: .rounded))
-                    .foregroundStyle(.black.opacity(0.86))
+                    .foregroundStyle(.white.opacity(0.9))
 
                 Spacer()
 
                 Text("Lv \(String(format: "%.2f", skill.level))")
                     .font(.system(size: 13, weight: .medium, design: .rounded))
-                    .foregroundStyle(.black.opacity(0.52))
+                    .foregroundStyle(Color(red: 0.76, green: 0.80, blue: 1.00).opacity(0.62))
             }
 
             GeometryReader { proxy in
                 ZStack(alignment: .leading) {
                     RoundedRectangle(cornerRadius: 999, style: .continuous)
-                        .fill(Color.black.opacity(0.08))
+                        .fill(Color.white.opacity(0.08))
 
                     RoundedRectangle(cornerRadius: 999, style: .continuous)
-                        .fill(Color.black.opacity(0.78))
+                        .fill(
+                            LinearGradient(
+                                colors: [
+                                    Color(red: 0.43, green: 0.30, blue: 0.98),
+                                    Color(red: 0.19, green: 0.55, blue: 1.00)
+                                ],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
                         .frame(width: proxy.size.width * CGFloat(max(skill.level.truncatingRemainder(dividingBy: 1), 0.05)))
                 }
             }
@@ -266,7 +304,7 @@ private struct SkillRow: View {
 
             Text("\(percentage)% to the next level")
                 .font(.system(size: 12, weight: .medium, design: .rounded))
-                .foregroundStyle(.black.opacity(0.48))
+                .foregroundStyle(.white.opacity(0.46))
         }
     }
 }
@@ -283,11 +321,11 @@ private struct ProjectRow: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(project.project.name)
                     .font(.system(size: 15, weight: .semibold, design: .rounded))
-                    .foregroundStyle(.black.opacity(0.86))
+                    .foregroundStyle(.white.opacity(0.9))
 
                 Text(project.status ?? "No status")
                     .font(.system(size: 12, weight: .medium, design: .rounded))
-                    .foregroundStyle(.black.opacity(0.48))
+                    .foregroundStyle(.white.opacity(0.48))
             }
 
             Spacer()
@@ -308,6 +346,6 @@ private struct EmptyStateRow: View {
     var body: some View {
         Text(text)
             .font(.system(size: 14, weight: .medium, design: .rounded))
-            .foregroundStyle(.black.opacity(0.52))
+            .foregroundStyle(.white.opacity(0.54))
     }
 }

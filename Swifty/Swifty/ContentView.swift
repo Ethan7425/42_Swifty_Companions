@@ -47,34 +47,46 @@ struct ContentView: View {
     }
 
     private var backgroundView: some View {
-        LinearGradient(
-            colors: [
-                Color(red: 0.97, green: 0.96, blue: 0.94),
-                Color(red: 0.91, green: 0.93, blue: 0.96)
-            ],
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-        )
-        .overlay(alignment: .topTrailing) {
+        ZStack {
+            LinearGradient(
+                colors: [
+                    Color(red: 0.05, green: 0.05, blue: 0.12),
+                    Color(red: 0.09, green: 0.07, blue: 0.22),
+                    Color(red: 0.02, green: 0.06, blue: 0.16)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+
             Circle()
-                .fill(Color.white.opacity(0.6))
+                .fill(Color(red: 0.52, green: 0.35, blue: 1.00).opacity(0.24))
+                .frame(width: 360, height: 360)
+                .blur(radius: 60)
+                .offset(x: -130, y: -220)
+
+            Circle()
+                .fill(Color(red: 0.11, green: 0.62, blue: 1.00).opacity(0.18))
                 .frame(width: 320, height: 320)
-                .blur(radius: 12)
-                .offset(x: 140, y: -180)
+                .blur(radius: 70)
+                .offset(x: 170, y: -120)
+
+            RoundedRectangle(cornerRadius: 44, style: .continuous)
+                .stroke(Color.white.opacity(0.05), lineWidth: 1)
+                .padding(18)
         }
         .ignoresSafeArea()
     }
 
     private var loginView: some View {
         VStack(alignment: .leading, spacing: 24) {
-            VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading, spacing: 12) {
                 Text("42 Swifty Companions")
-                    .font(.system(size: 34, weight: .semibold, design: .rounded))
-                    .foregroundStyle(.black.opacity(0.9))
+                    .font(.system(size: 36, weight: .bold, design: .rounded))
+                    .foregroundStyle(.white.opacity(0.96))
 
-                Text("Enter a 42 login to fetch the profile, level, skills, and projects.")
-                    .font(.system(size: 15, weight: .regular, design: .rounded))
-                    .foregroundStyle(.black.opacity(0.55))
+                Text("Search a 42 login and surface the profile, level, skills, achievements, and projects in one clean view.")
+                    .font(.system(size: 15, weight: .medium, design: .rounded))
+                    .foregroundStyle(Color.white.opacity(0.68))
                     .fixedSize(horizontal: false, vertical: true)
             }
 
@@ -89,13 +101,17 @@ struct ContentView: View {
             if let errorMessage {
                 Text(errorMessage)
                     .font(.system(size: 14, weight: .medium, design: .rounded))
-                    .foregroundStyle(Color(red: 0.68, green: 0.15, blue: 0.15))
+                    .foregroundStyle(Color(red: 1.00, green: 0.72, blue: 0.84))
                     .padding(14)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(
-                        Color.white.opacity(0.76),
+                        Color(red: 0.36, green: 0.10, blue: 0.25).opacity(0.36),
                         in: RoundedRectangle(cornerRadius: 18, style: .continuous)
                     )
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 18, style: .continuous)
+                            .stroke(Color(red: 1.00, green: 0.48, blue: 0.70).opacity(0.18), lineWidth: 1)
+                    }
             }
 
             Button(action: fetchProfile) {
@@ -116,26 +132,50 @@ struct ContentView: View {
                 .frame(height: 56)
                 .padding(.horizontal, 20)
                 .background(
-                    Color.black.opacity(0.92),
+                    LinearGradient(
+                        colors: [
+                            Color(red: 0.28, green: 0.24, blue: 0.89),
+                            Color(red: 0.39, green: 0.18, blue: 0.87),
+                            Color(red: 0.18, green: 0.48, blue: 0.98)
+                        ],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    ),
                     in: RoundedRectangle(cornerRadius: 20, style: .continuous)
                 )
+                .overlay {
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        .stroke(Color.white.opacity(0.14), lineWidth: 1)
+                }
+                .shadow(color: Color(red: 0.39, green: 0.18, blue: 0.87).opacity(0.38), radius: 18, x: 0, y: 10)
             }
             .buttonStyle(.plain)
             .disabled(isLoading)
 
             Text("The app reuses the cached OAuth token until it expires, so it does not create a token for each search.")
                 .font(.system(size: 13, weight: .medium, design: .rounded))
-                .foregroundStyle(.black.opacity(0.5))
+                .foregroundStyle(.white.opacity(0.46))
                 .fixedSize(horizontal: false, vertical: true)
         }
         .padding(28)
         .frame(maxWidth: 440)
-        .background(.white.opacity(0.72), in: RoundedRectangle(cornerRadius: 32, style: .continuous))
+        .background(
+            LinearGradient(
+                colors: [
+                    Color.white.opacity(0.12),
+                    Color(red: 0.13, green: 0.11, blue: 0.25).opacity(0.72)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            ),
+            in: RoundedRectangle(cornerRadius: 32, style: .continuous)
+        )
         .overlay(
             RoundedRectangle(cornerRadius: 32, style: .continuous)
-                .stroke(.white.opacity(0.8), lineWidth: 1)
+                .stroke(Color.white.opacity(0.12), lineWidth: 1)
         )
-        .shadow(color: .black.opacity(0.08), radius: 30, x: 0, y: 18)
+        .shadow(color: Color.black.opacity(0.34), radius: 30, x: 0, y: 18)
+        .shadow(color: Color(red: 0.45, green: 0.32, blue: 1.00).opacity(0.12), radius: 40, x: 0, y: 0)
     }
 
     private func fetchProfile() {
@@ -181,14 +221,19 @@ private struct InputField: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(title)
                 .font(.system(size: 13, weight: .medium, design: .rounded))
-                .foregroundStyle(.black.opacity(0.55))
+                .foregroundStyle(.white.opacity(0.58))
 
             HStack(spacing: 12) {
                 Image(systemName: systemImage)
-                    .foregroundStyle(.black.opacity(0.45))
+                    .foregroundStyle(Color(red: 0.68, green: 0.75, blue: 1.00).opacity(0.9))
                     .frame(width: 18)
 
-                TextField(prompt, text: $text)
+                TextField(
+                    "",
+                    text: $text,
+                    prompt: Text(prompt)
+                        .foregroundStyle(.white.opacity(0.35))
+                )
                     .autocorrectionDisabled()
                     .onChange(of: text) { _, newValue in
                         guard enforcesLowercase else { return }
@@ -198,11 +243,18 @@ private struct InputField: View {
                             text = normalizedValue
                         }
                     }
-                    .foregroundColor(.black.opacity(0.9))
+                    .foregroundColor(.white.opacity(0.92))
             }
             .padding(.horizontal, 16)
             .frame(height: 54)
-            .background(Color.white.opacity(0.82), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+            .background(
+                Color.white.opacity(0.08),
+                in: RoundedRectangle(cornerRadius: 18, style: .continuous)
+            )
+            .overlay {
+                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                    .stroke(Color(red: 0.61, green: 0.53, blue: 1.00).opacity(0.18), lineWidth: 1)
+            }
         }
     }
 }
