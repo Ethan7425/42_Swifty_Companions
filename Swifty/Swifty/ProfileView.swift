@@ -74,6 +74,34 @@ struct ProfileView: View {
                     }
                 }
 
+                SectionCard(title: "Achievements") {
+                    if profile.achievements.isEmpty {
+                        EmptyStateRow(text: "No achievements found.")
+                    } else {
+                        VStack(spacing: 12) {
+                            ForEach(profile.achievements) { achievement in
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(achievement.name)
+                                        .font(.system(size: 15, weight: .semibold, design: .rounded))
+                                        .foregroundStyle(.black.opacity(0.86))
+
+                                    if let description = achievement.description, !description.isEmpty {
+                                        Text(description)
+                                            .font(.system(size: 13, weight: .medium, design: .rounded))
+                                            .foregroundStyle(.black.opacity(0.56))
+                                    }
+                                }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(14)
+                                .background(
+                                    Color.white.opacity(0.72),
+                                    in: RoundedRectangle(cornerRadius: 18, style: .continuous)
+                                )
+                            }
+                        }
+                    }
+                }
+
                 SectionCard(title: "Completed Projects") {
                     if completedProjects.isEmpty {
                         EmptyStateRow(text: "No completed projects found.")
@@ -242,6 +270,9 @@ private struct SkillRow: View {
         }
     }
 }
+
+
+
 
 private struct ProjectRow: View {
     let project: FortyTwoProjectUser

@@ -8,9 +8,9 @@ import Foundation
 enum FortyTwoConfig {
     private static let environment = DotEnvLoader.load()
 
-    static let clientID = environment["CLIENT_ID"] ?? ""
-    static let clientSecret = environment["CLIENT_SECRET"] ?? ""
-    static let baseURL = URL(string: "https://api.intra.42.fr")!
+    nonisolated static let clientID = environment["CLIENT_ID"] ?? ""
+    nonisolated static let clientSecret = environment["CLIENT_SECRET"] ?? ""
+    nonisolated static let baseURL = URL(string: "https://api.intra.42.fr")!
 }
 
 enum DotEnvLoader {
@@ -136,6 +136,7 @@ actor FortyTwoAPIClient {
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
                 return try decoder.decode(FortyTwoUser.self, from: data)
             } catch {
+                debugPrint("FortyTwoUser decoding failed:", decodingFailureDescription(for: error))
                 throw FortyTwoAPIError.decodingError
             }
         case 401:
@@ -149,7 +150,7 @@ actor FortyTwoAPIClient {
         }
     }
     
-// User Projects
+// User Projects ! TODO
     
     
 
@@ -213,20 +214,41 @@ actor FortyTwoAPIClient {
             throw FortyTwoAPIError.networkError
         }
     }
+
+    private func decodingFailureDescription(for error: Error) -> String {
+        switch error {
+        case let DecodingError.keyNotFound(key, context):
+            return "keyNotFound(\(key.stringValue)) at \(codingPathDescription(context.codingPath)): \(context.debugDescription)"
+        case let DecodingError.valueNotFound(type, context):
+            return "valueNotFound(\(type)) at \(codingPathDescription(context.codingPath)): \(context.debugDescription)"
+        case let DecodingError.typeMismatch(type, context):
+            return "typeMismatch(\(type)) at \(codingPathDescription(context.codingPath)): \(context.debugDescription)"
+        case let DecodingError.dataCorrupted(context):
+            return "dataCorrupted at \(codingPathDescription(context.codingPath)): \(context.debugDescription)"
+        default:
+            return error.localizedDescription
+        }
+    }
+
+    private func codingPathDescription(_ path: [CodingKey]) -> String {
+        guard !path.isEmpty else { return "<root>" }
+        return path.map(\.stringValue).joined(separator: ".")
+    }
 }
 
-struct FortyTwoTokenResponse: Decodable {
+nonisolated struct FortyTwoTokenResponse: Decodable {
     let accessToken: String
     let expiresIn: Int
 }
 
-struct FortyTwoUser: Decodable {
+nonisolated struct FortyTwoUser: Decodable {
     let login: String
     let email: String?
     let phone: String?
     let displayname: String?
     let location: String?
     let wallet: Int?
+    let achievements: [FortyTwoAchievement]
     let image: FortyTwoImage?
     let cursusUsers: [FortyTwoCursusUser]
     let projectsUsers: [FortyTwoProjectUser]
@@ -243,25 +265,35 @@ struct FortyTwoUser: Decodable {
     }
 }
 
-struct FortyTwoImage: Decodable {
+nonisolated struct FortyTwoAchievement: Decodable, Identifiable {
+    let id: Int
+    let name: String
+    let description: String?
+    let tier: String?
+    let kind: String?
+    let visible: Bool?
+    let image: String?
+}
+
+nonisolated struct FortyTwoImage: Decodable {
     let link: String?
     let versions: FortyTwoImageVersions?
 }
 
-struct FortyTwoImageVersions: Decodable {
+nonisolated struct FortyTwoImageVersions: Decodable {
     let large: String?
     let medium: String?
     let small: String?
     let micro: String?
 }
 
-struct FortyTwoCursusUser: Decodable {
+nonisolated struct FortyTwoCursusUser: Decodable {
     let endAt: String?
     let level: Double?
     let skills: [FortyTwoSkill]
 }
 
-struct FortyTwoSkill: Decodable, Identifiable {
+nonisolated struct FortyTwoSkill: Decodable, Identifiable {
     let id = UUID()
     let name: String
     let level: Double
@@ -272,12 +304,38 @@ struct FortyTwoSkill: Decodable, Identifiable {
     }
 }
 
-struct FortyTwoProjectUser: Decodable, Identifiable {
+
+// PROJECTS STRUCTS
+nonisolated struct FortyTwoProjectUser: Decodable, Identifiable {
     let id: Int
     let finalMark: Int?
     let status: String?
     let validated: Bool?
     let project: FortyTwoProject
+    let currentTeamID: Int?
+    let cursusIDs: [Int]?
+    let marked: Bool?
+    let markedAt: String?
+    let occurrence: Int?
+    let retriableAt: String?
+    let createdAt: String?
+    let updatedAt: String?
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case finalMark
+        case status
+        case validated = "validated?"
+        case project
+        case currentTeamID
+        case cursusIDs
+        case marked
+        case markedAt
+        case occurrence
+        case retriableAt
+        case createdAt
+        case updatedAt
+    }
 
     var finalMarkText: String {
         if let finalMark {
@@ -287,6 +345,111 @@ struct FortyTwoProjectUser: Decodable, Identifiable {
     }
 }
 
-struct FortyTwoProject: Decodable {
+nonisolated struct FortyTwoProject: Decodable {
+    let id: Int
     let name: String
+    let slug: String?
+    let difficulty: Int?
+    let description: String?
+    let parent: FortyTwoProjectParent?
+    let children: [FortyTwoProjectChild]?
+    let objectives: [String]?
+    let attachments: [FortyTwoProjectAttachment]?
+    let createdAt: String?
+    let updatedAt: String?
+    let exam: Bool?
+    let cursus: [FortyTwoProjectCursus]?
+    let campus: [FortyTwoProjectCampus]?
+    let skills: [FortyTwoProjectSkill]?
+    let videos: [FortyTwoProjectVideo]?
+    let tags: [FortyTwoProjectTag]?
+    let projectSessions: [FortyTwoProjectSession]?
 }
+nonisolated struct FortyTwoProjectParent: Decodable {
+    let id: Int
+    let name: String?
+    let slug: String?
+    let url: String?
+}
+
+nonisolated struct FortyTwoProjectChild: Decodable, Identifiable {
+    let id: Int
+    let name: String?
+    let slug: String?
+    let url: String?
+}
+
+nonisolated struct FortyTwoProjectAttachment: Decodable {
+}
+
+nonisolated struct FortyTwoProjectCursus: Decodable, Identifiable {
+    let id: Int
+    let createdAt: String?
+    let name: String?
+    let slug: String?
+}
+
+nonisolated struct FortyTwoProjectCampus: Decodable, Identifiable {
+    let id: Int
+    let name: String?
+    let timeZone: String?
+    let language: FortyTwoProjectLanguage?
+    let usersCount: Int?
+    let vogsphereID: Int?
+}
+
+nonisolated struct FortyTwoProjectLanguage: Decodable, Identifiable {
+    let id: Int
+    let name: String?
+    let identifier: String?
+    let createdAt: String?
+    let updatedAt: String?
+}
+
+nonisolated struct FortyTwoProjectSkill: Decodable, Identifiable {
+    let id: Int
+    let name: String?
+    let createdAt: String?
+}
+
+nonisolated struct FortyTwoProjectVideo: Decodable {
+}
+
+nonisolated struct FortyTwoProjectTag: Decodable, Identifiable {
+    let id: Int
+    let name: String?
+    let kind: String?
+}
+
+nonisolated struct FortyTwoProjectSession: Decodable, Identifiable {
+    let id: Int
+    let solo: Bool?
+    let beginAt: String?
+    let endAt: String?
+    let difficulty: Int?
+    let estimateTime: Int?
+    let durationDays: Int?
+    let terminatingAfter: Int?
+    let projectID: Int?
+    let campusID: Int?
+    let cursusID: Int?
+    let createdAt: String?
+    let updatedAt: String?
+    let maxPeople: Int?
+    let isSubscriptable: Bool?
+    let scales: [FortyTwoProjectScale]
+    let uploads: [FortyTwoProjectUpload]
+    let teamBehaviour: String?
+}
+
+nonisolated struct FortyTwoProjectScale: Decodable, Identifiable {
+    let id: Int
+    let correctionNumber: Int?
+    let isPrimary: Bool?
+}
+
+nonisolated struct FortyTwoProjectUpload: Decodable, Identifiable {
+    let id: Int
+    let name: String?
+}
+
