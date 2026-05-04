@@ -150,10 +150,6 @@ actor FortyTwoAPIClient {
         }
     }
     
-// User Projects ! TODO
-    
-    
-
     private func validAccessToken() async throws -> String {
         if let cachedToken,
            let tokenExpirationDate,
@@ -244,9 +240,7 @@ nonisolated struct FortyTwoTokenResponse: Decodable {
 nonisolated struct FortyTwoUser: Decodable {
     let login: String
     let email: String?
-    let phone: String?
     let displayname: String?
-    let location: String?
     let wallet: Int?
     let achievements: [FortyTwoAchievement]
     let image: FortyTwoImage?
@@ -269,10 +263,6 @@ nonisolated struct FortyTwoAchievement: Decodable, Identifiable {
     let id: Int
     let name: String
     let description: String?
-    let tier: String?
-    let kind: String?
-    let visible: Bool?
-    let image: String?
 }
 
 nonisolated struct FortyTwoImage: Decodable {
@@ -281,10 +271,7 @@ nonisolated struct FortyTwoImage: Decodable {
 }
 
 nonisolated struct FortyTwoImageVersions: Decodable {
-    let large: String?
     let medium: String?
-    let small: String?
-    let micro: String?
 }
 
 nonisolated struct FortyTwoCursusUser: Decodable {
@@ -312,14 +299,6 @@ nonisolated struct FortyTwoProjectUser: Decodable, Identifiable {
     let status: String?
     let validated: Bool?
     let project: FortyTwoProject
-    let currentTeamID: Int?
-    let cursusIDs: [Int]?
-    let marked: Bool?
-    let markedAt: String?
-    let occurrence: Int?
-    let retriableAt: String?
-    let createdAt: String?
-    let updatedAt: String?
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -327,14 +306,6 @@ nonisolated struct FortyTwoProjectUser: Decodable, Identifiable {
         case status
         case validated = "validated?"
         case project
-        case currentTeamID
-        case cursusIDs
-        case marked
-        case markedAt
-        case occurrence
-        case retriableAt
-        case createdAt
-        case updatedAt
     }
 
     var finalMarkText: String {
@@ -346,110 +317,5 @@ nonisolated struct FortyTwoProjectUser: Decodable, Identifiable {
 }
 
 nonisolated struct FortyTwoProject: Decodable {
-    let id: Int
     let name: String
-    let slug: String?
-    let difficulty: Int?
-    let description: String?
-    let parent: FortyTwoProjectParent?
-    let children: [FortyTwoProjectChild]?
-    let objectives: [String]?
-    let attachments: [FortyTwoProjectAttachment]?
-    let createdAt: String?
-    let updatedAt: String?
-    let exam: Bool?
-    let cursus: [FortyTwoProjectCursus]?
-    let campus: [FortyTwoProjectCampus]?
-    let skills: [FortyTwoProjectSkill]?
-    let videos: [FortyTwoProjectVideo]?
-    let tags: [FortyTwoProjectTag]?
-    let projectSessions: [FortyTwoProjectSession]?
 }
-nonisolated struct FortyTwoProjectParent: Decodable {
-    let id: Int
-    let name: String?
-    let slug: String?
-    let url: String?
-}
-
-nonisolated struct FortyTwoProjectChild: Decodable, Identifiable {
-    let id: Int
-    let name: String?
-    let slug: String?
-    let url: String?
-}
-
-nonisolated struct FortyTwoProjectAttachment: Decodable {
-}
-
-nonisolated struct FortyTwoProjectCursus: Decodable, Identifiable {
-    let id: Int
-    let createdAt: String?
-    let name: String?
-    let slug: String?
-}
-
-nonisolated struct FortyTwoProjectCampus: Decodable, Identifiable {
-    let id: Int
-    let name: String?
-    let timeZone: String?
-    let language: FortyTwoProjectLanguage?
-    let usersCount: Int?
-    let vogsphereID: Int?
-}
-
-nonisolated struct FortyTwoProjectLanguage: Decodable, Identifiable {
-    let id: Int
-    let name: String?
-    let identifier: String?
-    let createdAt: String?
-    let updatedAt: String?
-}
-
-nonisolated struct FortyTwoProjectSkill: Decodable, Identifiable {
-    let id: Int
-    let name: String?
-    let createdAt: String?
-}
-
-nonisolated struct FortyTwoProjectVideo: Decodable {
-}
-
-nonisolated struct FortyTwoProjectTag: Decodable, Identifiable {
-    let id: Int
-    let name: String?
-    let kind: String?
-}
-
-nonisolated struct FortyTwoProjectSession: Decodable, Identifiable {
-    let id: Int
-    let solo: Bool?
-    let beginAt: String?
-    let endAt: String?
-    let difficulty: Int?
-    let estimateTime: Int?
-    let durationDays: Int?
-    let terminatingAfter: Int?
-    let projectID: Int?
-    let campusID: Int?
-    let cursusID: Int?
-    let createdAt: String?
-    let updatedAt: String?
-    let maxPeople: Int?
-    let isSubscriptable: Bool?
-    let scales: [FortyTwoProjectScale]
-    let uploads: [FortyTwoProjectUpload]
-    let teamBehaviour: String?
-}
-
-nonisolated struct FortyTwoProjectScale: Decodable, Identifiable {
-    let id: Int
-    let correctionNumber: Int?
-    let isPrimary: Bool?
-}
-
-nonisolated struct FortyTwoProjectUpload: Decodable, Identifiable {
-    let id: Int
-    let name: String?
-}
-
