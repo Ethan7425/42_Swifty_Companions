@@ -13,6 +13,7 @@ enum FortyTwoConfig {
     nonisolated static let baseURL = URL(string: "https://api.intra.42.fr")!
 }
 
+// Read .env
 enum DotEnvLoader {
     static func load() -> [String: String] {
         guard let url = dotEnvURL(),
@@ -60,14 +61,15 @@ enum DotEnvLoader {
     }
 }
 
+// Error Cases 
 enum FortyTwoAPIError: LocalizedError {
-    case missingCredentials
+    case missingCredentials //No Keys
     case invalidURL
     case invalidResponse
-    case loginNotFound
-    case unauthorized
-    case networkError
-    case decodingError
+    case loginNotFound // Wrong Login
+    case unauthorized // Wrong Keys
+    case networkError // Off Wifi
+    case decodingError // Change Ach Id to "String"
     case serverError(statusCode: Int)
 
     var errorDescription: String? {
@@ -110,7 +112,7 @@ actor FortyTwoAPIClient {
     private var cachedToken: String?
     private var tokenExpirationDate: Date?
 
-// User infos 
+    // User infos 
     func fetchUser(login: String) async throws -> FortyTwoUser {
         let token = try await validAccessToken()
         let encodedLogin = login.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
@@ -150,6 +152,7 @@ actor FortyTwoAPIClient {
         }
     }
     
+    // Only One Token Method
     private func validAccessToken() async throws -> String {
         if let cachedToken,
            let tokenExpirationDate,
@@ -232,6 +235,7 @@ actor FortyTwoAPIClient {
     }
 }
 
+// Decoding the API Response
 nonisolated struct FortyTwoTokenResponse: Decodable {
     let accessToken: String
     let expiresIn: Int

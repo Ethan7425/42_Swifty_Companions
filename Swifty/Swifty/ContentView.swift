@@ -54,7 +54,7 @@ struct ContentView: View {
     private var loginView: some View {
         VStack(alignment: .leading, spacing: 28) {
             VStack(alignment: .leading, spacing: 10) {
-                Text("42")
+                Text("42 Project")
                     .font(.system(size: 14, weight: .bold, design: .rounded))
                     .foregroundStyle(Color(red: 0.00, green: 0.73, blue: 0.58))
                     .padding(.horizontal, 10)
@@ -65,7 +65,7 @@ struct ContentView: View {
                     .font(.system(size: 34, weight: .bold, design: .rounded))
                     .foregroundStyle(.white)
 
-                Text("Search a 42 login to display the profile, skills, achievements, and project results.")
+                Text("Search a 42 login to display the profile, skills, achievements, project grades and various other infos.")
                     .font(.system(size: 15, weight: .regular, design: .rounded))
                     .foregroundStyle(.white.opacity(0.68))
                     .fixedSize(horizontal: false, vertical: true)
@@ -74,7 +74,7 @@ struct ContentView: View {
             InputField(
                 title: "42 Login",
                 text: $login,
-                prompt: "for example: jdoe",
+                prompt: "for example: etbernar",
                 systemImage: "person.text.rectangle",
                 enforcesLowercase: true
             )
@@ -123,11 +123,6 @@ struct ContentView: View {
             }
             .buttonStyle(.plain)
             .disabled(isLoading)
-
-            Text("The app reuses the cached OAuth token until it expires, so it does not create a token for each search.")
-                .font(.system(size: 13, weight: .medium, design: .rounded))
-                .foregroundStyle(.white.opacity(0.48))
-                .fixedSize(horizontal: false, vertical: true)
         }
         .padding(32)
         .frame(maxWidth: 460)

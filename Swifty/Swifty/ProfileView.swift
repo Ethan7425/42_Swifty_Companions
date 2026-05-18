@@ -86,18 +86,17 @@ struct ProfileView: View {
         }
     }
 
-    // Quick summary cards for the main user information.
+    // Summary cards for the main user infos
     private var detailsGrid: some View {
         LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 14)], spacing: 14) {
             DetailCard(title: "Login", value: profile.login)
             DetailCard(title: "Email", value: profile.email ?? "Unavailable")
-            DetailCard(title: "Mobile", value: "Unavailable")
             DetailCard(title: "Wallet", value: "\(profile.wallet ?? 0)")
             DetailCard(title: "Level", value: formattedLevel(primaryCursus?.level))
         }
     }
 
-    // Skills section for the active cursus.
+    // Skills section
     @ViewBuilder
     private var skillsSection: some View {
         if let skills = primaryCursus?.skills, !skills.isEmpty {
@@ -115,7 +114,7 @@ struct ProfileView: View {
         }
     }
 
-    // Achievement list with a compact text-only row style.
+    // Achievement list
     private var achievementsSection: some View {
         SectionCard(title: "Achievements") {
             if profile.achievements.isEmpty {
@@ -130,7 +129,7 @@ struct ProfileView: View {
         }
     }
 
-    // Projects validated by the user.
+    // Projects
     private var completedProjectsSection: some View {
         SectionCard(title: "Completed Projects") {
             if completedProjects.isEmpty {
@@ -145,7 +144,7 @@ struct ProfileView: View {
         }
     }
 
-    // Projects not yet validated by the user.
+    // Projects Failed
     private var failedProjectsSection: some View {
         SectionCard(title: "Failed Projects") {
             if failedProjects.isEmpty {
@@ -160,7 +159,6 @@ struct ProfileView: View {
         }
     }
 
-    // Remote profile image with a simple fallback avatar.
     private var profileImage: some View {
         Group {
             if let imageURL = profile.imageURL, let url = URL(string: imageURL) {
@@ -205,7 +203,6 @@ struct ProfileView: View {
     }
 }
 
-// Reusable card for short profile facts.
 private struct DetailCard: View {
     let title: String
     let value: String
@@ -235,7 +232,6 @@ private struct DetailCard: View {
     }
 }
 
-// Shared section wrapper used for skills, achievements, and projects.
 private struct SectionCard<Content: View>: View {
     let title: String
     @ViewBuilder let content: Content
@@ -261,7 +257,7 @@ private struct SectionCard<Content: View>: View {
     }
 }
 
-// Skill row with a progress bar toward the next level.
+// Skill row
 private struct SkillRow: View {
     let skill: FortyTwoSkill
 
@@ -302,7 +298,7 @@ private struct SkillRow: View {
     }
 }
 
-// Simple row for achievement title and description.
+
 private struct AchievementRow: View {
     let achievement: FortyTwoAchievement
 
@@ -331,7 +327,7 @@ private struct AchievementRow: View {
     }
 }
 
-// Project result row with status and final mark badge.
+// Project row
 private struct ProjectRow: View {
     let project: FortyTwoProjectUser
     let accent: Color
